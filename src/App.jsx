@@ -22,10 +22,10 @@ import { jsPDF } from 'jspdf';
 import { saveAs } from 'file-saver';
 
 // ── Welcome text shown on fresh start ─────────────────────
-const WELCOME_TEXT = `  WORDSTAR REBORN — Classic Editor, Modern Browser
+const WELCOME_TEXT = `  WORDSTAR REBORN — Classic Editor for Modern Browser
   ═══════════════════════════════════════════════════════
 
-  Welcome! You are now running WordStar Reborn.
+  Welcome! You are now running WordStar by Sanjeev.
 
   This editor faithfully recreates the classic WordStar 4.0
   keyboard experience in your browser.
@@ -40,7 +40,8 @@ const WELCOME_TEXT = `  WORDSTAR REBORN — Classic Editor, Modern Browser
   WORDSTAR DIAMOND (cursor movement):
   ────────────────────────────────────
         Ctrl+E (Up)
-  Ctrl+S (Left)  Ctrl+D (Right)
+        Ctrl+S (Left)  
+        Ctrl+D (Right)
         Ctrl+X (Down)
 
   FAMOUS SHORTCUTS:

@@ -96,7 +96,7 @@ export default function MenuBar({
   return (
     <div className="menu-bar" ref={menuRef}>
       <div className="menu-bar-left">
-        <div className="menu-title">WS★</div>
+        <div className="menu-title">JPN★</div>
         {menus.map(menu => (
           <div key={menu.id} className="menu-item">
             <button
