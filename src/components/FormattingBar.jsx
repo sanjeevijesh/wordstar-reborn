@@ -1,6 +1,6 @@
 import './FormattingBar.css';
 
-export default function FormattingBar({ onCenter, onBold, onUnderline, onTotal }) {
+export default function FormattingBar({ onCenter, onBold, onUnderline, onTotal, onGST }) {
   return (
     <div className="format-bar">
       <button className="format-btn" onClick={onBold} title="Bold (Ctrl+B)">
@@ -13,7 +13,10 @@ export default function FormattingBar({ onCenter, onBold, onUnderline, onTotal }
         <span>[≡] Center</span> <span className="shortcut">^+C</span>
       </button>
       <button className="format-btn" onClick={onTotal} title="Column Total (Ctrl+Shift+T)">
-        <span>[Σ] Total</span> <span className="shortcut">^+T</span>
+        <span>[Σ] Total</span> <span className="shortcut">^T</span>
+      </button>
+      <button className="format-btn" onClick={onGST} title="Add GST (18%)">
+        <span>[₹] GST</span>
       </button>
     </div>
   );

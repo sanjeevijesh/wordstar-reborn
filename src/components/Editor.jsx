@@ -1,8 +1,9 @@
 import { useRef, useEffect, useCallback, forwardRef, useImperativeHandle } from 'react';
 import './Editor.css';
+import { playKeyClick } from '../utils/audio';
 
 const Editor = forwardRef(function Editor(
-  { content, onChange, wordWrap, lineNumbers, mode, currentLine, onCursorChange },
+  { content, onChange, wordWrap, lineNumbers, mode, currentLine, onCursorChange, soundEnabled },
   ref
 ) {
   const textareaRef = useRef(null);
@@ -65,15 +66,57 @@ const Editor = forwardRef(function Editor(
   const handleSelect = () => reportCursor();
   const handleClick = () => reportCursor();
   const handleKeyUp = () => reportCursor();
+  const handleKeyDown = (e) => {
+    // Exclude modifiers
+    if (!['Control', 'Shift', 'Alt', 'Meta', 'CapsLock', 'Tab'].includes(e.key)) {
+      if (soundEnabled) playKeyClick();
+    }
+  };
 
   const handleChange = (e) => {
-    onChange(e.target.value);
-    reportCursor();
+    const ta = e.target;
+    let val = ta.value;
+    let pos = ta.selectionStart;
+
+    // WordStar Hard Auto-Wrap Logic
+    if (wordWrap) {
+      const margin = 78;
+      
+      // Find start and end of the current line being edited
+      let lineStart = val.lastIndexOf('\n', pos - 1);
+      lineStart = lineStart === -1 ? 0 : lineStart + 1;
+      
+      let lineEnd = val.indexOf('\n', pos);
+      lineEnd = lineEnd === -1 ? val.length : lineEnd;
+      
+      const currentLine = val.slice(lineStart, lineEnd);
+      
+      // If the line exceeds 78 chars, wrap the last word to the next line
+      if (currentLine.length > margin) {
+        // Find the last space within the margin limit
+        const spaceIdx = currentLine.lastIndexOf(' ', margin);
+        
+        if (spaceIdx > 0) {
+          // Swap the space for a newline
+          val = val.substring(0, lineStart + spaceIdx) + '\n' + val.substring(lineStart + spaceIdx + 1);
+        }
+      }
+    }
+
+    onChange(val);
+    
+    // Ensure cursor stays in the right place after React re-renders
+    setTimeout(() => {
+      if (ta) {
+        ta.selectionStart = ta.selectionEnd = pos;
+        reportCursor();
+      }
+    }, 0);
   };
 
   // Build ruler
   const buildRuler = () => {
-    const cols = 80;
+    const cols = 78;
     let ruler = '';
     for (let i = 1; i <= cols; i++) {
       if (i % 10 === 0) ruler += String(i / 10);
@@ -90,8 +133,11 @@ const Editor = forwardRef(function Editor(
   return (
     <div className="editor-container">
       {lineNumbers && (
-        <div className="line-numbers" ref={lineNumRef}>
-          {Array.from({ length: lineCount }, (_, i) => (
+        <div className="line-numbers-wrapper" style={{ display: 'flex', flexDirection: 'column', flexShrink: 0, width: '48px', background: 'var(--bg-secondary)', borderRight: '1px solid var(--text-dim)' }}>
+          {/* Fake ruler header to perfectly align with textarea's real ruler */}
+          <div style={{ height: '18px', borderBottom: '1px solid var(--text-dim)', flexShrink: 0 }} />
+          <div className="line-numbers" ref={lineNumRef} style={{ width: '100%', borderRight: 'none' }}>
+            {Array.from({ length: lineCount }, (_, i) => (
             <div
               key={i}
               className={`line-number ${i + 1 === currentLine ? 'current' : ''}`}
@@ -99,6 +145,7 @@ const Editor = forwardRef(function Editor(
               {i + 1}
             </div>
           ))}
+          </div>
         </div>
       )}
 
@@ -114,6 +161,7 @@ const Editor = forwardRef(function Editor(
           onChange={handleChange}
           onSelect={handleSelect}
           onClick={handleClick}
+          onKeyDown={handleKeyDown}
           onKeyUp={handleKeyUp}
           spellCheck={false}
           autoCorrect="off"

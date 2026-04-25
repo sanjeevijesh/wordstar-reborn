@@ -16,6 +16,8 @@ import useShortcuts from './hooks/useShortcuts';
 import useAutosave, { saveToStorage, loadFromStorage, clearStorage } from './hooks/useAutosave';
 import useUndoHistory from './hooks/useUndoHistory';
 import { parseLegacyFile } from './utils/legacyParser';
+import { TEMPLATES } from './utils/templates';
+import { initAudio, playSaveBeep, playBootSound } from './utils/audio';
 import { jsPDF } from 'jspdf';
 import { saveAs } from 'file-saver';
 
@@ -76,6 +78,7 @@ export default function App() {
   const [showSidebar, setShowSidebar] = useState(false);
   const [archiveFiles, setArchiveFiles] = useState([]);
   const [pendingImportFile, setPendingImportFile] = useState(null);
+  const [soundEnabled, setSoundEnabled] = useState(false);
 
   // Dialogs
   const [dialog, setDialog] = useState(null);
@@ -120,14 +123,19 @@ export default function App() {
 
   // ── Save file ─────────────────────────────────────────
   const handleSave = useCallback(() => {
+    if (fileName === 'untitled.txt') {
+      setDialog('saveAs');
+      return;
+    }
     setSaveState('saving');
     saveToStorage(content, fileName);
     // Download as .txt
     const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
     saveAs(blob, fileName);
+    if (soundEnabled) playSaveBeep();
     setTimeout(() => setSaveState('saved'), 600);
     showToast(`Saved: ${fileName}`, 'success');
-  }, [content, fileName, showToast]);
+  }, [content, fileName, showToast, soundEnabled]);
 
   // ── Save As ───────────────────────────────────────────
   const handleSaveAs = useCallback((name) => {
@@ -136,9 +144,10 @@ export default function App() {
     saveToStorage(content, name);
     const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
     saveAs(blob, name);
+    if (soundEnabled) playSaveBeep();
     setTimeout(() => setSaveState('saved'), 600);
     showToast(`Saved as: ${name}`, 'success');
-  }, [content, showToast]);
+  }, [content, showToast, soundEnabled]);
 
   // ── Open file ─────────────────────────────────────────
   const handleOpen = useCallback(() => {
@@ -246,6 +255,24 @@ export default function App() {
     setDialog(null);
     setTimeout(() => editorRef.current?.focus(), 50);
   };
+
+  // ── Templates ─────────────────────────────────────────
+  const handleTemplate = useCallback((templateKey) => {
+    const templateContent = TEMPLATES[templateKey];
+    if (saveState === 'modified') {
+      // Instead of making a complex dialog system, just do a simple confirm for now if modified
+      if (!window.confirm("You have unsaved changes. Discard and load template?")) return;
+    }
+    
+    // Drop first newline if it exists for cleaner insertion
+    const text = templateContent.replace(/^\n/, '');
+    setContent(text);
+    setFileName(`${templateKey}.txt`);
+    setSaveState('saved');
+    historyPush(text);
+    showToast(`Loaded template: ${templateKey}`, 'success');
+    setTimeout(() => editorRef.current?.focus(), 100);
+  }, [saveState, historyPush, showToast]);
 
   // ── Export PDF ────────────────────────────────────────
   const handleExportPdf = useCallback(() => {
@@ -449,7 +476,7 @@ export default function App() {
     const newLines = lines.map(line => {
       const trimmed = line.trim();
       if (trimmed.length === 0) return '';
-      const pad = Math.max(0, Math.floor((80 - trimmed.length) / 2));
+      const pad = Math.max(0, Math.floor((78 - trimmed.length) / 2));
       return ' '.repeat(pad) + trimmed;
     });
 
@@ -585,6 +612,47 @@ export default function App() {
     showToast(`Total = ${sumFormatted}`, 'success');
   }, [handleContentChange, showToast]);
 
+  const handleFormatGST = useCallback(() => {
+    const ta = editorRef.current?.getTextarea();
+    if (!ta) return;
+    const s = ta.selectionStart;
+    const text = ta.value;
+
+    const lastTotalIdx = text.lastIndexOf('Total:', s);
+    if (lastTotalIdx === -1) {
+      showToast('Calculate Total first!', 'info');
+      return;
+    }
+    
+    const lineEnd = text.indexOf('\n', lastTotalIdx);
+    const lineEndFixed = lineEnd === -1 ? text.length : lineEnd;
+    const totalLine = text.slice(lastTotalIdx, lineEndFixed);
+    
+    const numMatch = totalLine.match(/-?[\d,]+\.?\d*/g);
+    if (!numMatch) return;
+    
+    const totalValue = parseFloat(numMatch[numMatch.length - 1].replace(/,/g, ''));
+    if (isNaN(totalValue)) return;
+    
+    const gst = totalValue * 0.18;
+    const final = totalValue + gst;
+    
+    const gstFormatted = new Intl.NumberFormat('en-IN', { maximumFractionDigits: 2 }).format(gst);
+    const finalFormatted = new Intl.NumberFormat('en-IN', { maximumFractionDigits: 2 }).format(final);
+    
+    const gstPrefix = 'GST (18%):';
+    const gstPad = totalLine.length - gstPrefix.length - gstFormatted.length;
+    const gstStr = `\n${gstPrefix}${' '.repeat(Math.max(1, gstPad))}${gstFormatted}`;
+
+    const grandPrefix = 'Grand Total:';
+    const grandPad = totalLine.length - grandPrefix.length - finalFormatted.length;
+    const grandStr = `\n${grandPrefix}${' '.repeat(Math.max(1, grandPad))}${finalFormatted}`;
+
+    const newContent = text.slice(0, lineEndFixed) + gstStr + grandStr + text.slice(lineEndFixed);
+    handleContentChange(newContent);
+    showToast('GST Added', 'success');
+  }, [handleContentChange, showToast]);
+
   // ── Autosave ──────────────────────────────────────────
   useAutosave({
     content,
@@ -627,6 +695,7 @@ export default function App() {
     onFormatBold: handleFormatBold,
     onFormatUnderline: handleFormatUnderline,
     onFormatTotal: handleFormatTotal,
+    onFormatGST: handleFormatGST,
   });
 
   // ── Word / char count ─────────────────────────────────
@@ -637,13 +706,14 @@ export default function App() {
   // ── Theme class ───────────────────────────────────────
   const themeClass = theme ? ` ${theme}` : '';
 
-  if (!booted) return <BootScreen onComplete={() => setBooted(true)} />;
+  if (!booted) return <BootScreen onComplete={() => setBooted(true)} soundEnabled={soundEnabled} />;
 
   return (
     <div 
       className={`app-wrapper${themeClass}`}
       onDragOver={handleDragOver}
       onDrop={handleDrop}
+      onClick={() => { if (soundEnabled) initAudio(); }}
     >
       {/* Recovery banner */}
       {recovery && (
@@ -678,6 +748,7 @@ export default function App() {
       {/* Menu bar */}
       <MenuBar
         onNew={handleNew}
+        onTemplate={handleTemplate}
         onOpen={handleOpen}
         onImportLegacy={() => {
           const input = document.createElement('input');
@@ -709,6 +780,17 @@ export default function App() {
         lineNumbers={lineNumbers}
         prefixKey={prefixKey}
         modified={saveState === 'modified'}
+        soundEnabled={soundEnabled}
+        onToggleSound={() => {
+          setSoundEnabled(s => {
+            const next = !s;
+            if (next) {
+              initAudio();
+              playBootSound();
+            }
+            return next;
+          });
+        }}
       />
 
       <FormattingBar 
@@ -716,6 +798,7 @@ export default function App() {
         onBold={handleFormatBold} 
         onUnderline={handleFormatUnderline} 
         onTotal={handleFormatTotal} 
+        onGST={handleFormatGST}
       />
 
       {/* Hidden button for toggling sidebar from menu */}
@@ -773,6 +856,7 @@ export default function App() {
           mode={insertMode ? 'insert' : 'overwrite'}
           currentLine={cursorLine}
           onCursorChange={handleCursorChange}
+          soundEnabled={soundEnabled}
         />
       </div>
 

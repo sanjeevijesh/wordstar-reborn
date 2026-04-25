@@ -95,6 +95,7 @@ export default function useShortcuts({
   onFormatBold,
   onFormatUnderline,
   onFormatTotal,
+  onFormatGST,
 }) {
   const prefixRef = useRef(null); // 'K' or 'Q'
   const prefixTimeout = useRef(null);
@@ -225,6 +226,9 @@ export default function useShortcuts({
           case 'C': 
             if (e.shiftKey) { e.preventDefault(); onFormatCenter?.(); return; }
             break;
+          case 'G':
+            if (e.shiftKey) { e.preventDefault(); onFormatGST?.(); return; }
+            e.preventDefault(); deleteChar(); return;
           case 'T':
             if (e.shiftKey) { e.preventDefault(); onFormatTotal?.(); return; }
             e.preventDefault(); deleteWord(); return;
@@ -275,7 +279,7 @@ export default function useShortcuts({
 
           // Editing
           case 'Y': e.preventDefault(); deleteLine(); return;
-          case 'G': e.preventDefault(); deleteChar(); return;
+          case 'G': if (e.shiftKey) return; e.preventDefault(); deleteChar(); return;
           case 'H': {
             e.preventDefault();
             const ta2 = getTA();
@@ -356,7 +360,7 @@ export default function useShortcuts({
     onFindNext,
     deleteLine, deleteChar, deleteWord,
     setPrefix, clearPrefix, insertMode,
-    onFormatCenter, onFormatBold, onFormatUnderline, onFormatTotal
+    onFormatCenter, onFormatBold, onFormatUnderline, onFormatTotal, onFormatGST
   ]);
 
   return null;

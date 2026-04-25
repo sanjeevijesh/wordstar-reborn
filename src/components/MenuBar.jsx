@@ -7,10 +7,11 @@ export default function MenuBar({
   onUndo, onRedo,
   onToggleWordWrap, onToggleLineNumbers,
   currentTheme, onThemeChange,
-  onPrint, onAbout, onImportLegacy,
+  onPrint, onAbout, onImportLegacy, onTemplate,
   wordWrap, lineNumbers,
   prefixKey,
   modified,
+  soundEnabled, onToggleSound,
 }) {
   const [activeMenu, setActiveMenu] = useState(null);
   const menuRef = useRef(null);
@@ -36,7 +37,13 @@ export default function MenuBar({
     {
       id: 'file', label: ['F', 'ile'],
       items: [
-        { label: 'New', hotkey: 'Ctrl+N', action: onNew },
+        { label: 'New Blank File', hotkey: 'Ctrl+N', action: onNew },
+        { separator: true },
+        { label: 'Template: Invoice', hotkey: '', action: () => onTemplate('invoice') },
+        { label: 'Template: Quotation', hotkey: '', action: () => onTemplate('quotation') },
+        { label: 'Template: Letter', hotkey: '', action: () => onTemplate('letter') },
+        { label: 'Template: Receipt', hotkey: '', action: () => onTemplate('receipt') },
+        { separator: true },
         { label: 'Open...', hotkey: 'Ctrl+K D', action: onOpen },
         { label: 'Import Legacy File...', hotkey: '', action: onImportLegacy },
         { separator: true },
@@ -67,6 +74,7 @@ export default function MenuBar({
       items: [
         { label: `Word Wrap: ${wordWrap ? 'ON' : 'OFF'}`, hotkey: 'Ctrl+W', action: onToggleWordWrap },
         { label: `Line Numbers: ${lineNumbers ? 'ON' : 'OFF'}`, hotkey: '', action: onToggleLineNumbers },
+        { label: `Sound Effects: ${soundEnabled ? 'ON' : 'OFF'}`, hotkey: '', action: onToggleSound },
         { separator: true },
         { label: 'Toggle Legacy Archive', hotkey: '', action: () => doAction(() => document.getElementById('toggle-archive-btn')?.click()) },
         { separator: true },

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import './BootScreen.css';
+import { playBootSound } from '../utils/audio';
 
 const BOOT_LINES = [
   { text: 'BIOS v2.0 — Memory check...', delay: 200, cls: '' },
@@ -14,13 +15,14 @@ const BOOT_LINES = [
   { text: 'WORDSTAR REBORN ready.', delay: 3100, cls: 'ok' },
 ];
 
-export default function BootScreen({ onComplete }) {
+export default function BootScreen({ onComplete, soundEnabled }) {
   const [visibleLines, setVisibleLines] = useState([]);
   const [progress, setProgress] = useState(0);
   const [showPrompt, setShowPrompt] = useState(false);
   const [showPressKey, setShowPressKey] = useState(false);
 
   useEffect(() => {
+    if (soundEnabled) playBootSound();
     const timers = [];
 
     BOOT_LINES.forEach((line, i) => {
