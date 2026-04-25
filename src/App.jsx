@@ -53,7 +53,7 @@ const WELCOME_TEXT = `  WORDSTAR REBORN — Classic Editor, Modern Browser
   Start typing below this line or open a file.
   ═══════════════════════════════════════════════════════
 
-  Personal Edition for SANJEEVIJESH
+  Personal Edition for JEYAPRAGASH NARAYANAN AUDITOR OFFICE
 `;
 
 // ── Toast helper ──────────────────────────────────────────
