@@ -1,0 +1,142 @@
+/* App.css */
+.app-wrapper {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-primary);
+  overflow: hidden;
+  animation: crtFlicker 12s infinite;
+}
+
+/* ── Help Bar (WordStar-style quick-help strip) ─────── */
+.help-bar {
+  height: 20px;
+  background: var(--bg-secondary);
+  border-bottom: 1px solid var(--text-dim);
+  display: flex;
+  align-items: center;
+  padding: 0 6px;
+  gap: 0;
+  flex-shrink: 0;
+  overflow: hidden;
+  font-family: var(--font-mono);
+  font-size: 11px;
+}
+
+.help-item {
+  display: flex;
+  align-items: center;
+  padding: 0 6px;
+  gap: 3px;
+  border-right: 1px solid var(--text-dim);
+  height: 100%;
+  white-space: nowrap;
+}
+
+.help-item:last-child {
+  border-right: none;
+}
+
+.help-key {
+  background: var(--text-primary);
+  color: var(--bg-primary);
+  padding: 0 3px;
+  font-size: 10px;
+  font-weight: bold;
+  border-radius: 1px;
+  min-width: 18px;
+  text-align: center;
+}
+
+.help-desc {
+  color: var(--text-dim);
+  font-size: 10px;
+}
+
+/* ── Recovery Banner ────────────────────────────────── */
+.recovery-banner {
+  background: var(--text-highlight);
+  color: #000;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  padding: 5px 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+  justify-content: center;
+  flex-wrap: wrap;
+  animation: fadeIn 0.3s ease;
+}
+
+.recovery-banner strong {
+  font-weight: bold;
+}
+
+.recovery-btn {
+  background: #000;
+  color: var(--text-highlight);
+  border: 1px solid #000;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  padding: 2px 10px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.recovery-btn:hover {
+  background: #222;
+}
+
+/* ── Notification Toast ─────────────────────────────── */
+.toast {
+  position: fixed;
+  bottom: 30px;
+  right: 16px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  padding: 8px 16px;
+  box-shadow: 3px 3px 0 var(--text-dim);
+  z-index: 600;
+  animation: slideUp 0.2s ease, fadeOut 0.4s ease 2.6s forwards;
+  max-width: 300px;
+}
+
+@keyframes fadeOut {
+  to { opacity: 0; transform: translateY(10px); }
+}
+
+.toast.success { border-color: #00ff41; color: #00ff41; }
+.toast.error { border-color: #ff5555; color: #ff5555; }
+.toast.info { border-color: var(--text-primary); }
+
+/* ── Block mode highlight ───────────────────────────── */
+.editor-textarea.block-mode::selection {
+  background: var(--selection-bg);
+}
+
+/* ── Watermark ──────────────────────────────────────── */
+.watermark {
+  position: fixed;
+  bottom: 40px;
+  right: 20px;
+  font-family: var(--font-retro);
+  font-size: 24px;
+  color: var(--text-dim);
+  opacity: 0.15;
+  pointer-events: none;
+  z-index: 100;
+  letter-spacing: 4px;
+  user-select: none;
+  transform: rotate(-5deg);
+}
+
+/* ── Mobile warning ─────────────────────────────────── */
+@media (max-width: 600px) {
+  .help-bar { display: none; }
+  .menu-title { display: none; }
+  .editor-ruler { display: none; }
+}

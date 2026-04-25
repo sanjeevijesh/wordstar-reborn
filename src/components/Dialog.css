@@ -1,0 +1,210 @@
+/* Dialog.css */
+.dialog-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 400;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 0.1s ease;
+}
+
+.dialog-box {
+  background: var(--bg-dialog);
+  border: 1px solid var(--border-color);
+  box-shadow: 4px 4px 0 var(--text-dim), 0 0 20px rgba(0,255,255,0.15);
+  min-width: 320px;
+  max-width: 90vw;
+  animation: slideUp 0.15s ease;
+  font-family: var(--font-mono);
+}
+
+.dialog-title-bar {
+  background: var(--text-primary);
+  color: var(--bg-dialog);
+  padding: 4px 8px;
+  font-size: 13px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  letter-spacing: 1px;
+  user-select: none;
+}
+
+.dialog-close-btn {
+  background: transparent;
+  border: none;
+  color: var(--bg-dialog);
+  font-size: 16px;
+  cursor: pointer;
+  padding: 0 4px;
+  line-height: 1;
+  font-family: var(--font-mono);
+  font-weight: bold;
+}
+
+.dialog-body {
+  padding: 16px;
+}
+
+.dialog-field {
+  margin-bottom: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.dialog-field label {
+  font-size: 12px;
+  color: var(--text-dim);
+  letter-spacing: 0.5px;
+}
+
+.dialog-input {
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  padding: 5px 8px;
+  outline: none;
+  width: 100%;
+  caret-color: var(--cursor-color);
+}
+
+.dialog-input:focus {
+  border-color: var(--text-primary);
+  box-shadow: 0 0 6px var(--text-dim);
+}
+
+.dialog-checkbox-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  margin-bottom: 8px;
+}
+
+.dialog-checkbox-row input[type="checkbox"] {
+  accent-color: var(--text-primary);
+  width: 14px;
+  height: 14px;
+  cursor: pointer;
+}
+
+.dialog-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+  margin-top: 4px;
+  flex-wrap: wrap;
+}
+
+.dialog-btn {
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  padding: 5px 14px;
+  cursor: pointer;
+  letter-spacing: 0.5px;
+  transition: background 0.1s, color 0.1s;
+  text-transform: uppercase;
+}
+
+.dialog-btn:hover,
+.dialog-btn:focus {
+  background: var(--text-primary);
+  color: var(--bg-primary);
+  outline: none;
+}
+
+.dialog-btn.primary {
+  background: var(--text-primary);
+  color: var(--bg-dialog);
+}
+
+.dialog-btn.primary:hover {
+  background: var(--text-highlight);
+  border-color: var(--text-highlight);
+  color: #000;
+}
+
+/* Shortcuts help table */
+.shortcuts-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+
+.shortcuts-table th {
+  text-align: left;
+  padding: 4px 8px;
+  background: var(--bg-primary);
+  color: var(--text-dim);
+  font-size: 11px;
+  border-bottom: 1px solid var(--text-dim);
+}
+
+.shortcuts-table td {
+  padding: 3px 8px;
+  color: var(--text-primary);
+  border-bottom: 1px solid rgba(0,255,255,0.1);
+}
+
+.shortcuts-table td:first-child {
+  color: var(--text-highlight);
+  white-space: nowrap;
+  font-weight: bold;
+}
+
+.shortcuts-table tr:hover td {
+  background: rgba(0,255,255,0.05);
+}
+
+.shortcuts-section {
+  margin-bottom: 8px;
+}
+
+.shortcuts-section-title {
+  color: var(--text-highlight);
+  font-size: 12px;
+  padding: 6px 0 2px;
+  border-bottom: 1px solid var(--text-dim);
+  margin-bottom: 4px;
+  letter-spacing: 1px;
+}
+
+.dialog-info-text {
+  color: var(--text-secondary);
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+.dialog-info-text strong {
+  color: var(--text-highlight);
+}
+
+.dialog-scrollable {
+  max-height: 60vh;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.find-result-info {
+  font-size: 11px;
+  color: var(--text-dim);
+  margin-top: 4px;
+  min-height: 16px;
+}
+.find-result-info.found {
+  color: #00ff41;
+}
+.find-result-info.not-found {
+  color: #ff5555;
+}

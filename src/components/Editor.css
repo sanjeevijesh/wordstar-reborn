@@ -1,0 +1,121 @@
+/* Editor.css */
+.editor-container {
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+  overflow: hidden;
+  background: var(--bg-editor);
+  position: relative;
+}
+
+/* Line numbers gutter */
+.line-numbers {
+  width: 48px;
+  flex-shrink: 0;
+  background: var(--bg-secondary);
+  border-right: 1px solid var(--text-dim);
+  overflow: hidden;
+  padding: 8px 0;
+  text-align: right;
+}
+
+.line-number {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  line-height: 1.5;
+  padding-right: 6px;
+  color: var(--text-dim);
+  height: 19.5px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  user-select: none;
+  transition: color 0.1s;
+}
+
+.line-number.current {
+  color: var(--text-highlight);
+  background: rgba(255, 255, 0, 0.05);
+}
+
+/* Editor wrapper */
+.editor-main {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* The actual textarea */
+.editor-textarea {
+  flex: 1;
+  background: var(--bg-editor);
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+  font-size: 14px;
+  line-height: 1.5;
+  border: none;
+  outline: none;
+  resize: none;
+  padding: 8px 12px;
+  caret-color: var(--cursor-color);
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: auto;
+  tab-size: 4;
+  -webkit-text-fill-color: var(--text-primary);
+  animation: crtFlicker 8s infinite;
+  text-align: left; /* Enforce strict left alignment */
+}
+
+.editor-textarea.no-wrap {
+  white-space: pre;
+  overflow-x: auto;
+}
+
+.editor-textarea.wrap {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow-x: hidden;
+}
+
+/* Overwrite mode cursor */
+.editor-textarea.overwrite {
+  caret-color: transparent;
+}
+
+/* Fixed-width ruler */
+.editor-ruler {
+  height: 18px;
+  background: var(--bg-secondary);
+  border-bottom: 1px solid var(--text-dim);
+  padding: 0 12px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-dim);
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  user-select: none;
+  flex-shrink: 0;
+  white-space: pre;
+  letter-spacing: 0;
+}
+
+/* Block selection overlay */
+.editor-block-overlay {
+  position: absolute;
+  pointer-events: none;
+  background: var(--selection-bg);
+  opacity: 0.4;
+}
+
+/* Find highlight overlay */
+.find-match-overlay {
+  position: absolute;
+  pointer-events: none;
+  background: rgba(255, 255, 0, 0.3);
+  border: 1px solid #ffff00;
+}

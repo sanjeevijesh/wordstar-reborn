@@ -1,0 +1,44 @@
+.format-bar {
+  display: flex;
+  background: var(--bg-secondary);
+  border-bottom: 1px solid var(--border-color);
+  padding: 2px 8px;
+  gap: 8px;
+  flex-shrink: 0;
+  overflow-x: auto;
+}
+
+.format-btn {
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  padding: 2px 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+  transition: all 0.1s;
+}
+
+.format-btn:hover {
+  background: var(--text-primary);
+  color: var(--bg-menu);
+  border-color: var(--text-primary);
+}
+
+.format-btn strong {
+  font-weight: bold;
+}
+
+.format-btn .shortcut {
+  font-size: 10px;
+  color: var(--text-dim);
+  margin-left: 4px;
+}
+
+.format-btn:hover .shortcut {
+  color: var(--bg-menu);
+}

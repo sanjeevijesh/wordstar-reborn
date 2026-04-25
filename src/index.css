@@ -1,0 +1,181 @@
+/* =========================================
+   WordStar Reborn — Global Styles
+   ========================================= */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  /* DOS Cyan Theme (default) */
+  --bg-primary: #000000;
+  --bg-secondary: #000080;
+  --bg-editor: #000000;
+  --bg-menu: #000080;
+  --bg-status: #000080;
+  --bg-dialog: #000080;
+  --text-primary: #00ffff;
+  --text-secondary: #ffffff;
+  --text-highlight: #ffff00;
+  --text-dim: #008888;
+  --border-color: #00ffff;
+  --cursor-color: #00ffff;
+  --selection-bg: #008080;
+  --selection-text: #ffffff;
+  --hotkey-color: #ffff00;
+  --scanline-opacity: 0.03;
+
+  /* Fonts */
+  --font-mono: 'Share Tech Mono', 'Courier Prime', 'Courier New', monospace;
+  --font-retro: 'VT323', 'Share Tech Mono', monospace;
+}
+
+/* Green Monitor Theme */
+.theme-green {
+  --bg-primary: #001200;
+  --bg-secondary: #002800;
+  --bg-editor: #001200;
+  --bg-menu: #002800;
+  --bg-status: #002800;
+  --bg-dialog: #002800;
+  --text-primary: #00ff41;
+  --text-secondary: #00cc33;
+  --text-highlight: #ccff00;
+  --text-dim: #005500;
+  --border-color: #00ff41;
+  --cursor-color: #00ff41;
+  --selection-bg: #005500;
+}
+
+/* Amber CRT Theme */
+.theme-amber {
+  --bg-primary: #1a0f00;
+  --bg-secondary: #2a1800;
+  --bg-editor: #0d0700;
+  --bg-menu: #2a1800;
+  --bg-status: #2a1800;
+  --bg-dialog: #2a1800;
+  --text-primary: #ffb000;
+  --text-secondary: #ffd700;
+  --text-highlight: #ffffff;
+  --text-dim: #664400;
+  --border-color: #ffb000;
+  --cursor-color: #ffb000;
+  --selection-bg: #663300;
+}
+
+/* Blue DOS Theme */
+.theme-blue {
+  --bg-primary: #000080;
+  --bg-secondary: #0000aa;
+  --bg-editor: #000080;
+  --bg-menu: #0000aa;
+  --bg-status: #0000aa;
+  --bg-dialog: #0000aa;
+  --text-primary: #ffffff;
+  --text-secondary: #aaaaff;
+  --text-highlight: #ffff55;
+  --text-dim: #5555aa;
+  --border-color: #aaaaff;
+  --cursor-color: #ffffff;
+  --selection-bg: #aaaaaa;
+}
+
+html, body {
+  height: 100%;
+  overflow: hidden;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+  font-size: 14px;
+  line-height: 1.4;
+  user-select: none;
+}
+
+#root {
+  height: 100%;
+}
+
+/* CRT scanline effect */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 0, 0, var(--scanline-opacity)) 2px,
+    rgba(0, 0, 0, var(--scanline-opacity)) 4px
+  );
+  pointer-events: none;
+  z-index: 9999;
+}
+
+/* CRT flicker animation */
+@keyframes crtFlicker {
+  0%, 100% { opacity: 1; }
+  92% { opacity: 1; }
+  93% { opacity: 0.97; }
+  94% { opacity: 1; }
+  97% { opacity: 0.98; }
+  98% { opacity: 1; }
+}
+
+/* Blink animation */
+@keyframes blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+
+/* Glow pulse */
+@keyframes glowPulse {
+  0%, 100% { text-shadow: 0 0 4px currentColor; }
+  50% { text-shadow: 0 0 12px currentColor, 0 0 20px currentColor; }
+}
+
+/* Boot screen typing animation */
+@keyframes typewriter {
+  from { width: 0; }
+  to { width: 100%; }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-primary);
+  border-left: 1px solid var(--border-color);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--text-dim);
+  border: 1px solid var(--border-color);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-primary);
+}
+
+/* Selection */
+::selection {
+  background: var(--selection-bg);
+  color: var(--selection-text, var(--text-secondary));
+}
+
+button {
+  cursor: pointer;
+  font-family: var(--font-mono);
+}

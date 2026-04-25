@@ -1,0 +1,127 @@
+/* BootScreen.css */
+.boot-screen {
+  position: fixed;
+  inset: 0;
+  background: #000000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: crtFlicker 8s infinite;
+  font-family: var(--font-retro);
+  overflow: hidden;
+}
+
+.boot-screen::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at center, rgba(0,255,255,0.03) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.boot-logo {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.boot-logo-title {
+  font-size: clamp(32px, 8vw, 72px);
+  color: #00ffff;
+  text-shadow: 0 0 20px #00ffff, 0 0 40px #00ffff66;
+  letter-spacing: 8px;
+  animation: glowPulse 2s infinite;
+  line-height: 1.1;
+}
+
+.boot-logo-sub {
+  font-size: clamp(14px, 3vw, 22px);
+  color: #008888;
+  letter-spacing: 4px;
+  margin-top: 8px;
+}
+
+.boot-version {
+  font-size: clamp(12px, 2vw, 18px);
+  color: #ffff00;
+  margin-top: 4px;
+  letter-spacing: 2px;
+}
+
+.boot-divider {
+  width: min(600px, 90vw);
+  height: 1px;
+  background: linear-gradient(90deg, transparent, #00ffff, transparent);
+  margin: 20px auto;
+  box-shadow: 0 0 8px #00ffff;
+}
+
+.boot-lines {
+  width: min(600px, 90vw);
+  font-size: clamp(11px, 2vw, 16px);
+  color: #008888;
+  line-height: 1.8;
+  font-family: var(--font-mono);
+}
+
+.boot-line {
+  opacity: 0;
+  animation: fadeIn 0.3s ease forwards;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.boot-line.ok {
+  color: #00ff41;
+}
+
+.boot-line.warn {
+  color: #ffb000;
+}
+
+.boot-prompt {
+  margin-top: 30px;
+  font-size: clamp(16px, 3vw, 24px);
+  color: #00ffff;
+  animation: blink 1s infinite;
+  letter-spacing: 2px;
+  font-family: var(--font-retro);
+}
+
+.boot-press-key {
+  margin-top: 16px;
+  font-size: clamp(11px, 2vw, 16px);
+  color: #ffff00;
+  font-family: var(--font-mono);
+  opacity: 0;
+  animation: fadeIn 0.5s ease forwards;
+  animation-delay: 3.5s;
+}
+
+.boot-progress-bar {
+  width: min(400px, 80vw);
+  height: 6px;
+  background: #001a1a;
+  border: 1px solid #00ffff44;
+  margin-top: 20px;
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.boot-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #008888, #00ffff);
+  box-shadow: 0 0 8px #00ffff;
+  transition: width 0.1s linear;
+  border-radius: 2px;
+}
+
+.boot-copyright {
+  position: absolute;
+  bottom: 20px;
+  font-size: 12px;
+  color: #003333;
+  font-family: var(--font-mono);
+  letter-spacing: 1px;
+}
