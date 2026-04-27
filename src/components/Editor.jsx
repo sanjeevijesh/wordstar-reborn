@@ -3,7 +3,7 @@ import './Editor.css';
 import { playKeyClick } from '../utils/audio';
 
 const Editor = forwardRef(function Editor(
-  { content, onChange, wordWrap, lineNumbers, mode, currentLine, onCursorChange, soundEnabled },
+  { content, onChange, wordWrap, lineNumbers, mode, currentLine, onCursorChange, soundEnabled, margin = 78, onMarginChange },
   ref
 ) {
   const textareaRef = useRef(null);
@@ -80,8 +80,6 @@ const Editor = forwardRef(function Editor(
 
     // WordStar Hard Auto-Wrap Logic
     if (wordWrap) {
-      const margin = 78;
-      
       // Find start and end of the current line being edited
       let lineStart = val.lastIndexOf('\n', pos - 1);
       lineStart = lineStart === -1 ? 0 : lineStart + 1;
@@ -91,7 +89,7 @@ const Editor = forwardRef(function Editor(
       
       const currentLine = val.slice(lineStart, lineEnd);
       
-      // If the line exceeds 78 chars, wrap the last word to the next line
+      // If the line exceeds margin chars, wrap the last word to the next line
       if (currentLine.length > margin) {
         // Find the last space within the margin limit
         const spaceIdx = currentLine.lastIndexOf(' ', margin);
@@ -116,14 +114,39 @@ const Editor = forwardRef(function Editor(
 
   // Build ruler
   const buildRuler = () => {
-    const cols = 78;
-    let ruler = '';
-    for (let i = 1; i <= cols; i++) {
-      if (i % 10 === 0) ruler += String(i / 10);
-      else if (i % 5 === 0) ruler += '+';
-      else ruler += '·';
+    const maxCols = 150;
+    const elements = [];
+    for (let i = 1; i <= maxCols; i++) {
+      let char = '-';
+      if (i === 1) char = 'L';
+      else if (i === margin) char = 'R';
+      else if ((i - 1) % 5 === 0) char = '!';
+
+      elements.push(
+        <span 
+          key={i} 
+          onClick={() => {
+             if (i === margin) {
+                const newMarg = prompt("Set right margin:", margin);
+                if (newMarg && !isNaN(newMarg)) {
+                   onMarginChange?.(parseInt(newMarg, 10));
+                }
+             } else {
+                onMarginChange?.(i);
+             }
+          }}
+          style={{ 
+            cursor: 'pointer', 
+            color: i > margin ? 'var(--text-dim)' : 'inherit',
+            opacity: i > margin ? 0.5 : 1
+          }}
+          title={`Click to set margin to ${i}`}
+        >
+          {char}
+        </span>
+      );
     }
-    return ruler;
+    return elements;
   };
 
   // Line numbers
