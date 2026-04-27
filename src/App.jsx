@@ -26,6 +26,7 @@ const WELCOME_TEXT = `  WORDSTAR REBORN — Classic Editor for Modern Browser
   ═══════════════════════════════════════════════════════
 
   Welcome! You are now running WordStar by Sanjeev.
+  Speacially made for the King Vijesh Kanth
 
   This editor faithfully recreates the classic WordStar 4.0
   keyboard experience in your browser.
