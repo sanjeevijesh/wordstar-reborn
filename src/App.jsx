@@ -71,6 +71,7 @@ export default function App() {
   const [wordWrap, setWordWrap] = useState(true);
   const [lineNumbers, setLineNumbers] = useState(true);
   const [insertMode, setInsertMode] = useState(true); // true=insert, false=overwrite
+  const [margin, setMargin] = useState(78);
   const [cursorLine, setCursorLine] = useState(1);
   const [cursorCol, setCursorCol] = useState(1);
   const [prefixKey, setPrefixKey] = useState(null);
@@ -477,7 +478,7 @@ export default function App() {
     const newLines = lines.map(line => {
       const trimmed = line.trim();
       if (trimmed.length === 0) return '';
-      const pad = Math.max(0, Math.floor((78 - trimmed.length) / 2));
+      const pad = Math.max(0, Math.floor((margin - trimmed.length) / 2));
       return ' '.repeat(pad) + trimmed;
     });
 
@@ -858,6 +859,8 @@ export default function App() {
           currentLine={cursorLine}
           onCursorChange={handleCursorChange}
           soundEnabled={soundEnabled}
+          margin={margin}
+          onMarginChange={setMargin}
         />
       </div>
 
